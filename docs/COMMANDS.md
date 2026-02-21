@@ -22,9 +22,9 @@ Full website SEO audit with parallel analysis.
 4. Generates SEO Health Score (0-100)
 5. Creates prioritized action plan
 
-**Output:**
-- `FULL-AUDIT-REPORT.md`
-- `ACTION-PLAN.md`
+**Output:** All files written to `projects/{slug}/{run}/`:
+- `final-report.md` — health score + prioritised action plan
+- `technical-audit.md`, `content-analysis.md`, `schema-report.md`, etc.
 - `screenshots/` (if Playwright available)
 
 ---

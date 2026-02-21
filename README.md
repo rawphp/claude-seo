@@ -1,215 +1,117 @@
-<!-- Updated: 2026-02-08 -->
-
-![Claude SEO](screenshots/cover-image.jpeg)
+<!-- Updated: 2026-02-21 -->
 
 # Claude SEO
 
-Comprehensive SEO analysis skill for Claude Code. Covers technical SEO, on-page analysis, content quality (E-E-A-T), schema markup, image optimization, sitemap architecture, AI search optimization (GEO), and strategic planning.
+Agent-based SEO analysis system. Audits websites across technical SEO, content quality (E-E-A-T), schema markup, performance, images, sitemaps, and AI search optimization (GEO). Saves all outputs locally with versioned run history per project.
 
-![SEO Command Demo](screenshots/seo-command-demo.gif)
-
-[![Claude Code Skill](https://img.shields.io/badge/Claude%20Code-Skill-blue)](https://claude.ai/claude-code)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-
-## Installation
-
-### One-Command Install (Unix/macOS/Linux)
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/claude-seo/main/install.sh | bash
-```
-
-### Manual Install
-
-```bash
-git clone https://github.com/AgriciDaniel/claude-seo.git
-cd claude-seo
-./install.sh
-```
-
-### Windows
-
-```powershell
-irm https://raw.githubusercontent.com/AgriciDaniel/claude-seo/main/install.ps1 | iex
-```
+Works with any LLM provider — Claude, GPT-4, Gemini, or any agent runner that can read markdown and use tools.
 
 ## Quick Start
 
 ```bash
-# Start Claude Code
-claude
-
-# Run a full site audit
-/seo audit https://example.com
-
-# Analyze a single page
-/seo page https://example.com/about
-
-# Check schema markup
-/seo schema https://example.com
-
-# Generate a sitemap
-/seo sitemap generate
-
-# Optimize for AI search
-/seo geo https://example.com
+git clone https://github.com/AgriciDaniel/claude-seo.git
+cd claude-seo
+pip install -r requirements.txt
+playwright install chromium  # optional, for screenshots
 ```
-### Demo:
-[Watch the full demo on YouTube](https://www.youtube.com/watch?v=COMnNlUakQk)
 
-**`/seo audit` — full site audit with parallel subagents:**
+Then open the repo in your LLM of choice and run an audit:
 
-![SEO Audit Demo](screenshots/seo-audit-demo.gif)
+```
+Audit https://example.com
+```
 
-## Commands
+The orchestrator handles the rest — intake, parallel agent execution, synthesis, and saving everything to `projects/`.
+
+## How It Works
+
+Point your LLM at `agents/orchestrator.md` to start a full audit:
+
+1. **Intake** — asks for URL, goal, priority pages; creates `projects/{slug}/run-001/`
+2. **Parallel analysis** — 6 specialist agents run simultaneously
+3. **Synthesis** — orchestrator combines all reports into `final-report.md` with health score
+4. **History** — re-audit the same domain to get score deltas and track progress over time
+
+```
+projects/
+  example-com/
+    project.md        ← audit history across all runs
+    run-001/          ← first audit
+    run-002/          ← second audit (shows what improved/regressed)
+```
+
+## Analysis Coverage
+
+| Agent | What it covers |
+|-------|---------------|
+| `seo-technical` | Crawlability, indexability, security, URL structure, mobile, Core Web Vitals, JS rendering |
+| `seo-content` | E-E-A-T signals, word count, readability, AI citation readiness, thin content |
+| `seo-schema` | JSON-LD detection/validation, deprecated type enforcement, generation |
+| `seo-sitemap` | XML validation, coverage gaps, location page quality gates |
+| `seo-performance` | LCP, INP, CLS — current 2026 thresholds |
+| `seo-visual` | Desktop + mobile screenshots, above-fold analysis, layout issues |
+
+## Individual Commands (Claude Code)
+
+For targeted analysis without creating a project:
 
 | Command | Description |
 |---------|-------------|
-| `/seo audit <url>` | Full website audit with parallel subagent delegation |
 | `/seo page <url>` | Deep single-page analysis |
-| `/seo sitemap <url>` | Analyze existing XML sitemap |
-| `/seo sitemap generate` | Generate new sitemap with industry templates |
-| `/seo schema <url>` | Detect, validate, and generate Schema.org markup |
-| `/seo images <url>` | Image optimization analysis |
 | `/seo technical <url>` | Technical SEO audit (8 categories) |
-| `/seo content <url>` | E-E-A-T and content quality analysis |
+| `/seo content <url>` | E-E-A-T and content quality |
+| `/seo schema <url>` | Schema detection, validation, generation |
+| `/seo images <url>` | Image optimization analysis |
+| `/seo sitemap <url>` | Sitemap validation and generation |
 | `/seo geo <url>` | AI Overviews / Generative Engine Optimization |
 | `/seo plan <type>` | Strategic SEO planning (saas, local, ecommerce, publisher, agency) |
-| `/seo programmatic <url>` | Programmatic SEO analysis and planning |
+| `/seo programmatic <url>` | Programmatic SEO analysis |
 | `/seo competitor-pages <url>` | Competitor comparison page generation |
-| `/seo hreflang <url>` | Hreflang/i18n SEO audit and generation |
-
-### `/seo programmatic [url|plan]`
-**Programmatic SEO Analysis & Planning**
-
-Build SEO pages at scale from data sources with quality safeguards.
-
-**Capabilities:**
-- Analyze existing programmatic pages for thin content and cannibalization
-- Plan URL patterns and template structures for data-driven pages
-- Internal linking automation between generated pages
-- Canonical strategy and index bloat prevention
-- Quality gates: ⚠️ WARNING at 100+ pages, 🛑 HARD STOP at 500+ without audit
-
-### `/seo competitor-pages [url|generate]`
-**Competitor Comparison Page Generator**
-
-Create high-converting "X vs Y" and "alternatives to X" pages.
-
-**Capabilities:**
-- Structured comparison tables with feature matrices
-- Product schema markup with AggregateRating
-- Conversion-optimized layouts with CTA placement
-- Keyword targeting for comparison intent queries
-- Fairness guidelines for accurate competitor representation
-
-### `/seo hreflang [url]`
-**Hreflang / i18n SEO Audit & Generation**
-
-Validate and generate hreflang tags for multi-language sites.
-
-**Capabilities:**
-- Generate hreflang tags (HTML, HTTP headers, or XML sitemap)
-- Validate self-referencing tags, return tags, x-default
-- Detect common mistakes (missing returns, invalid codes, HTTP/HTTPS mismatch)
-- Cross-domain hreflang support
-- Language/region code validation (ISO 639-1 + ISO 3166-1)
+| `/seo hreflang <url>` | Hreflang/i18n SEO audit |
 
 ## Features
 
-### Core Web Vitals (Current Metrics)
-- **LCP** (Largest Contentful Paint): Target < 2.5s
-- **INP** (Interaction to Next Paint): Target < 200ms
-- **CLS** (Cumulative Layout Shift): Target < 0.1
+### Core Web Vitals (2026)
+- **LCP** < 2.5s — Largest Contentful Paint
+- **INP** < 200ms — Interaction to Next Paint (replaced FID March 2024)
+- **CLS** < 0.1 — Cumulative Layout Shift
 
-> Note: INP replaced FID on March 12, 2024. FID was fully removed from all Chrome tools on September 9, 2024.
+### E-E-A-T (Dec 2025 QRG)
+Now applies to all competitive queries (not just YMYL):
+- Experience, Expertise, Authoritativeness, Trustworthiness
 
-### E-E-A-T Analysis
-Updated to September 2025 Quality Rater Guidelines:
-- **Experience**: First-hand knowledge signals
-- **Expertise**: Author credentials and depth
-- **Authoritativeness**: Industry recognition
-- **Trustworthiness**: Contact info, security, transparency
-
-### Schema Markup
-- Detection: JSON-LD (preferred), Microdata, RDFa
-- Validation against Google's supported types
-- Generation with templates
-- Deprecation awareness:
-  - HowTo: Deprecated (Sept 2023)
-  - FAQ: Restricted to gov/health sites (Aug 2023)
-  - SpecialAnnouncement: Deprecated (July 2025)
+### Schema Enforcement
+- Deprecated: HowTo (Sept 2023), SpecialAnnouncement (July 2025)
+- Restricted: FAQ — government and healthcare only (Aug 2023)
+- 20+ ready-to-use JSON-LD templates in `schema/templates.json`
 
 ### AI Search Optimization (GEO)
-New for 2026 - optimize for:
-- Google AI Overviews
-- ChatGPT web search
-- Perplexity
-- Other AI-powered search
+- Google AI Overviews, ChatGPT, Perplexity optimization
+- AI crawler access (GPTBot, ClaudeBot, PerplexityBot)
+- llms.txt compliance, passage-level citability scoring
 
 ### Quality Gates
-- Warning at 30+ location pages
+- Warning at 30+ location pages (enforce 60%+ unique content)
 - Hard stop at 50+ location pages
-- Thin content detection per page type
-- Doorway page prevention
-
-## Architecture
-
-```
-~/.claude/skills/seo/         # Main skill
-~/.claude/skills/seo-*/       # Sub-skills (12 total)
-~/.claude/agents/seo-*.md     # Subagents (6 total)
-```
-
-### Video & Live Schema (New)
-Additional schema types for video content, live streaming, and key moments:
-- VideoObject — Video page markup with thumbnails, duration, upload date
-- BroadcastEvent — LIVE badge support for live streaming content
-- Clip — Key moments / chapters within videos
-- SeekToAction — Enable seek functionality in video rich results
-- SoftwareSourceCode — Open source and code repository pages
-
-See `schema/templates.json` for ready-to-use JSON-LD snippets.
-
-### Recently Added
-- Programmatic SEO skill (`/seo programmatic`)
-- Competitor comparison pages skill (`/seo competitor-pages`)
-- Multi-language hreflang validation (`/seo hreflang`)
-- Video & Live schema types (VideoObject, BroadcastEvent, Clip, SeekToAction)
-- Google SEO quick-reference guide
+- Programmatic SEO: warning at 100+ pages, hard stop at 500+
 
 ## Requirements
 
 - Python 3.8+
-- Claude Code CLI
-- Optional: Playwright for screenshots
+- `pip install -r requirements.txt`
+- Playwright (optional, for screenshots): `playwright install chromium`
 
-## Uninstall
+## MCP Integrations
 
-```bash
-curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/claude-seo/main/uninstall.sh | bash
-```
-
-### MCP Integrations
-
-Integrates with MCP servers for live SEO data — including official servers from **Ahrefs** (`@ahrefs/mcp`) and **Semrush**, plus community servers for Google Search Console, PageSpeed Insights, and DataForSEO. See [MCP Integration Guide](docs/MCP-INTEGRATION.md) for setup.
+Integrates with MCP servers for live data — Ahrefs (`@ahrefs/mcp`), Semrush, Google Search Console, PageSpeed Insights, DataForSEO. See [MCP Integration Guide](docs/MCP-INTEGRATION.md).
 
 ## Documentation
 
-- [Installation Guide](docs/INSTALLATION.md)
-- [Commands Reference](docs/COMMANDS.md)
 - [Architecture](docs/ARCHITECTURE.md)
+- [Commands Reference](docs/COMMANDS.md)
 - [MCP Integration](docs/MCP-INTEGRATION.md)
 - [Troubleshooting](docs/TROUBLESHOOTING.md)
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
-
-## Contributing
-
-Contributions welcome! Please read the guidelines in `docs/` before submitting PRs.
-
----
-
-Built for Claude Code by [@AgriciDaniel](https://github.com/AgriciDaniel)
+MIT — see [LICENSE](LICENSE)

@@ -75,3 +75,20 @@ Provide:
 - Mobile responsiveness assessment
 - Above-the-fold content evaluation
 - Specific issues with element locations
+
+## Output Destination
+
+When invoked by the orchestrator, write your full report to:
+```
+projects/{slug}/{run}/visual-audit.md
+```
+
+Save screenshots to `projects/{slug}/{run}/screenshots/` instead of the global `screenshots/` directory.
+
+Read the active project slug from `projects/.current-project`.
+Read the active run from `projects/{slug}/.current-run`.
+Begin the output file with:
+```markdown
+# Visual SEO Audit — {Business Name or domain}
+**Project:** {slug}  **Run:** {run}  **URL:** {url}  **Date:** {YYYY-MM-DD}
+```

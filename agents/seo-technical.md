@@ -47,3 +47,18 @@ Provide a structured report with:
 6. Core Web Vitals (LCP, INP, CLS potential issues)
 7. Structured Data (detection, validation)
 8. JavaScript Rendering (CSR vs SSR)
+
+## Output Destination
+
+When invoked by the orchestrator, write your full report to:
+```
+projects/{slug}/{run}/technical-audit.md
+```
+
+Read the active project slug from `projects/.current-project`.
+Read the active run from `projects/{slug}/.current-run`.
+Begin the output file with:
+```markdown
+# Technical SEO Audit — {Business Name or domain}
+**Project:** {slug}  **Run:** {run}  **URL:** {url}  **Date:** {YYYY-MM-DD}
+```

@@ -34,6 +34,12 @@ env/
 # Node (if any)
 node_modules/
 
+# Claude local settings
+.claude/
+
+# Playwright MCP session data
+.playwright-mcp/
+
 # Logs
 *.log
 
@@ -47,3 +53,6 @@ screenshots/
 # Temporary analysis files
 *-AUDIT-REPORT.md
 *-ACTION-PLAN.md
+
+/projects/*
+!/projects/.gitkeep

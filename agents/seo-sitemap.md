@@ -68,3 +68,20 @@ Provide:
 - Extra pages (in sitemap but 404 or redirected)
 - Quality gate warnings if applicable
 - Generated sitemap XML if creating new
+
+## Output Destination
+
+When invoked by the orchestrator, write your full report to:
+```
+projects/{slug}/{run}/sitemap-analysis.md
+```
+
+Read the active project slug from `projects/.current-project`.
+Read the active run from `projects/{slug}/.current-run`.
+Begin the output file with:
+```markdown
+# Sitemap Analysis — {Business Name or domain}
+**Project:** {slug}  **Run:** {run}  **URL:** {url}  **Date:** {YYYY-MM-DD}
+```
+
+If a HARD STOP quality gate is triggered (50+ location pages), write the report up to that point, add a `## BLOCKED` section explaining the issue, and stop. The orchestrator will escalate to the user.

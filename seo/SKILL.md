@@ -23,7 +23,7 @@ allowed-tools:
 # SEO — Universal SEO Analysis Skill
 
 Comprehensive SEO analysis across all industries (SaaS, local services,
-e-commerce, publishers, agencies). Orchestrates 12 specialized sub-skills
+e-commerce, publishers, agencies). Orchestrates 11 specialized sub-skills
 and 6 subagents.
 
 ## Quick Reference
@@ -43,13 +43,27 @@ and 6 subagents.
 | `/seo competitor-pages [url\|generate]` | Competitor comparison page generation |
 | `/seo hreflang [url]` | Hreflang/i18n SEO audit and generation |
 
+## Project Lifecycle
+
+When `/seo audit` is invoked, hand off to the `orchestrator` agent. It handles:
+- Project folder creation (`projects/{slug}/`) with versioned runs (`run-001`, `run-002`, …)
+- `.current-project` and `.current-run` tracking
+- Parallel subagent coordination
+- Cross-run comparison and score delta
+- Final report assembly in `projects/{slug}/{run}/final-report.md`
+- Audit history table in `projects/{slug}/project.md`
+
+For all other `/seo` commands (page, schema, sitemap, etc.), run the relevant sub-skill directly — no project folder needed unless the user explicitly asks to save output.
+
 ## Orchestration Logic
 
-When the user invokes `/seo audit`, delegate to subagents in parallel:
-1. Detect business type (SaaS, local, ecommerce, publisher, agency, other)
-2. Spawn subagents: seo-technical, seo-content, seo-schema, seo-sitemap, seo-performance, seo-visual
-3. Collect results and generate unified report with SEO Health Score (0-100)
-4. Create prioritized action plan (Critical → High → Medium → Low)
+When the user invokes `/seo audit`, delegate to the `orchestrator` agent which:
+1. Runs intake (URL, goal, priority pages) and creates a versioned run folder
+2. Spawns all 6 subagents in parallel: seo-technical, seo-content, seo-schema, seo-sitemap, seo-performance, seo-visual
+3. Each agent writes its report to `projects/{slug}/{run}/{report}.md`
+4. Collects all 6 reports and synthesises into `final-report.md` with SEO Health Score (0-100)
+5. Compares vs previous run if one exists (score delta, resolved/regressed issues)
+6. Updates `projects/{slug}/project.md` audit history table
 
 For individual commands, load the relevant sub-skill directly.
 
@@ -103,20 +117,19 @@ Weighted aggregate of all categories:
 
 ## Sub-Skills
 
-This skill orchestrates 12 specialized sub-skills:
+This skill orchestrates 11 specialized sub-skills:
 
-1. **seo-audit** — Full website audit with parallel delegation
-2. **seo-page** — Deep single-page analysis
-3. **seo-technical** — Technical SEO (8 categories)
-4. **seo-content** — E-E-A-T and content quality
-5. **seo-schema** — Schema markup detection and generation
-6. **seo-images** — Image optimization
-7. **seo-sitemap** — Sitemap analysis and generation
-8. **seo-geo** — AI Overviews / GEO optimization
-9. **seo-plan** — Strategic planning with templates
-10. **seo-programmatic** — Programmatic SEO analysis and planning
-11. **seo-competitor-pages** — Competitor comparison page generation
-12. **seo-hreflang** — Hreflang/i18n SEO audit and generation
+1. **seo-page** — Deep single-page analysis
+2. **seo-technical** — Technical SEO (8 categories)
+3. **seo-content** — E-E-A-T and content quality
+4. **seo-schema** — Schema markup detection and generation
+5. **seo-images** — Image optimization
+6. **seo-sitemap** — Sitemap analysis and generation
+7. **seo-geo** — AI Overviews / GEO optimization
+8. **seo-plan** — Strategic planning with templates
+9. **seo-programmatic** — Programmatic SEO analysis and planning
+10. **seo-competitor-pages** — Competitor comparison page generation
+11. **seo-hreflang** — Hreflang/i18n SEO audit and generation
 
 ## Subagents
 

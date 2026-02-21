@@ -60,3 +60,18 @@ Provide:
 - E-E-A-T breakdown with scores per factor
 - AI citation readiness score
 - Specific improvement recommendations
+
+## Output Destination
+
+When invoked by the orchestrator, write your full report to:
+```
+projects/{slug}/{run}/content-analysis.md
+```
+
+Read the active project slug from `projects/.current-project`.
+Read the active run from `projects/{slug}/.current-run`.
+Begin the output file with:
+```markdown
+# Content Quality Analysis — {Business Name or domain}
+**Project:** {slug}  **Run:** {run}  **URL:** {url}  **Date:** {YYYY-MM-DD}
+```

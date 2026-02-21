@@ -24,9 +24,9 @@ Should start with `---` followed by YAML.
 claude
 ```
 
-4. Re-run installer:
+4. Re-run setup:
 ```bash
-curl -fsSL https://raw.githubusercontent.com/AgriciDaniel/claude-seo/main/install.sh | bash
+pip install -r requirements.txt
 ```
 
 ---

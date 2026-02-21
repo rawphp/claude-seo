@@ -76,3 +76,18 @@ Provide:
 - Core Web Vitals status (pass/fail per metric)
 - Specific bottlenecks identified
 - Prioritized recommendations with expected impact
+
+## Output Destination
+
+When invoked by the orchestrator, write your full report to:
+```
+projects/{slug}/{run}/performance-report.md
+```
+
+Read the active project slug from `projects/.current-project`.
+Read the active run from `projects/{slug}/.current-run`.
+Begin the output file with:
+```markdown
+# Performance Report — {Business Name or domain}
+**Project:** {slug}  **Run:** {run}  **URL:** {url}  **Date:** {YYYY-MM-DD}
+```
